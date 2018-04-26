@@ -18,7 +18,7 @@ class Board extends Component {
 	componentWillMount() {
 		var self = this
 		if(this.props.count) {
-			fetch(`https://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`)
+			fetch(`https://hipsum.co/api/?type=hipster-centric&sentences=${this.props.count}`)
 				.then(response => response.json())
 				.then(json => json[0]
 								.split('. ')
