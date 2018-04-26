@@ -1,30 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Note from './Note'
 import FaPlus from 'react-icons/lib/fa/plus'
 
 class Board extends Component {
-
-	// initialize the notes
 	constructor(props) {
 		super(props)
 		this.state = {
-			notes: [
-				{
-					id: 0,
-					note: "Call James"
-				},
-				{
-					id: 1,
-					note: "Email Claire"
-				},
-				{
-					id: 2,
-					note: "Order Pizza"
-				}
-			]
+			notes: []
 		}
-
-		// bind our methods
 		this.add = this.add.bind(this)
 		this.eachNote = this.eachNote.bind(this)
 		this.update = this.update.bind(this)
@@ -32,11 +15,21 @@ class Board extends Component {
 		this.nextId = this.nextId.bind(this)
 	}
 
-	// add a note
+	componentWillMount() {
+		var self = this
+		if(this.props.count) {
+			fetch(`https://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`)
+				.then(response => response.json())
+				.then(json => json[0]
+								.split('. ')
+								.forEach(sentence => self.add(sentence.substring(0, 25))))
+		}
+	}
+
 	add(text) {
 		this.setState(prevState => ({
 			notes: [
-				...prevState.notes, 
+				...prevState.notes,
 				{
 					id: this.nextId(),
 					note: text
@@ -45,13 +38,11 @@ class Board extends Component {
 		}))
 	}
 
-	// get the next ID
 	nextId() {
 		this.uniqueId = this.uniqueId || 0
-		return this.uniqueId++		// increment the ID each time we add a new note
+		return this.uniqueId++
 	}
 
-	// update a note
 	update(newText, i) {
 		console.log('updating item at index', i, newText)
 		this.setState(prevState => ({
@@ -61,7 +52,6 @@ class Board extends Component {
 		}))
 	}
 
-	// delete a note
 	remove(id) {
 		console.log('removing item at', id)
 		this.setState(prevState => ({
@@ -69,13 +59,14 @@ class Board extends Component {
 		}))
 	}
 
-	// display a note
 	eachNote(note, i) {
 		return (
-			<Note key={i} index={i} 
-				onChange={this.update}
-				onRemove={this.remove}
-			>{note.note}</Note>
+			<Note key={note.id}
+				  index={note.id}
+				  onChange={this.update}
+				  onRemove={this.remove}>
+				  {note.note}
+		    </Note>
 		)
 	}
 
@@ -83,9 +74,8 @@ class Board extends Component {
 		return (
 			<div className="board">
 				{this.state.notes.map(this.eachNote)}
-				<button 
-					onClick={this.add.bind(null, "New Note")}
-					id="add">
+				<button onClick={this.add.bind(null, "New Note")}
+						id="add">
 					<FaPlus />
 				</button>
 			</div>
