@@ -4,6 +4,7 @@ import FaPlus from 'react-icons/lib/fa/plus'
 
 class Board extends Component {
 
+	// initialize the notes
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -23,7 +24,7 @@ class Board extends Component {
 			]
 		}
 
-		// bind stuff
+		// bind our methods
 		this.add = this.add.bind(this)
 		this.eachNote = this.eachNote.bind(this)
 		this.update = this.update.bind(this)
@@ -31,6 +32,7 @@ class Board extends Component {
 		this.nextId = this.nextId.bind(this)
 	}
 
+	// add a note
 	add(text) {
 		this.setState(prevState => ({
 			notes: [
@@ -43,11 +45,13 @@ class Board extends Component {
 		}))
 	}
 
+	// get the next ID
 	nextId() {
 		this.uniqueId = this.uniqueId || 0
 		return this.uniqueId++		// increment the ID each time we add a new note
 	}
 
+	// update a note
 	update(newText, i) {
 		console.log('updating item at index', i, newText)
 		this.setState(prevState => ({
@@ -57,6 +61,7 @@ class Board extends Component {
 		}))
 	}
 
+	// delete a note
 	remove(id) {
 		console.log('removing item at', id)
 		this.setState(prevState => ({
@@ -64,14 +69,13 @@ class Board extends Component {
 		}))
 	}
 
+	// display a note
 	eachNote(note, i) {
 		return (
 			<Note key={i} index={i} 
 				onChange={this.update}
 				onRemove={this.remove}
-			>
-				{note.note}
-			</Note>
+			>{note.note}</Note>
 		)
 	}
 
